@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Universe - Video Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --facebook-blue: #1877F2;
+            --facebook-dark: #0a5db8;
+            --facebook-light: #e7f3ff;
+            --gradient-start: #667eea;
+            --gradient-end: #764ba2;
+            --bg-dark: #0f1419;
+            --bg-card: #1a1f2e;
+            --bg-card-hover: #242b3d;
+            --text-primary: #ffffff;
+            --text-secondary: #8899a6;
+            --accent-green: #00d26a;
+            --accent-red: #f4212e;
+            --accent-orange: #ff9500;
+            --accent-pink: #f33e58;
+            --accent-purple: #794BC4;
+            --accent-cyan: #19c5f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1a2e 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(24, 119, 242, 0.1);
+            animation: float 25s linear infinite;
+            bottom: -150px;
+            border-radius: 50%;
+        }
+
+        .bg-animation span:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
+        .bg-animation span:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
+        .bg-animation span:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
+        .bg-animation span:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+        .bg-animation span:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
+        .bg-animation span:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; }
+        .bg-animation span:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 7s; }
+        .bg-animation span:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 45s; }
+        .bg-animation span:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 35s; }
+        .bg-animation span:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 11s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(26, 31, 46, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-primary), var(--facebook-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text span {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--facebook-blue);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Controls */
+        .controls {
+            background: rgba(26, 31, 46, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .controls-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--facebook-blue);
+            background: rgba(24, 119, 242, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--facebook-blue);
+            border-color: var(--facebook-blue);
+            color: white;
+        }
+
+        .sort-select {
+            padding: 10px 35px 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238899a6' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        .sort-select option {
+            background: var(--bg-card);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title h2 {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .section-title .badge {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan));
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .section-title.trending .badge {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-red));
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active, .view-btn:hover {
+            background: var(--facebook-blue);
+            border-color: var(--facebook-blue);
+            color: white;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 30px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .video-grid.list-view {
+            grid-template-columns: 1fr;
+        }
+
+        /* Video Card */
+        .video-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border-color: rgba(24, 119, 242, 0.3);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .video-card:hover .video-thumbnail img {
+            transform: scale(1.1);
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .video-rank {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--facebook-blue), var(--gradient-end));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(24, 119, 242, 0.4);
+        }
+
+        .video-rank.gold { background: linear-gradient(135deg, #ffd700, #ff8c00); }
+        .video-rank.silver { background: linear-gradient(135deg, #c0c0c0, #808080); }
+        .video-rank.bronze { background: linear-gradient(135deg, #cd7f32, #8b4513); }
+
+        .video-trending-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-red));
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .video-content {
+            padding: 20px;
+        }
+
+        .video-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(24, 119, 242, 0.2);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--facebook-blue);
+            margin-bottom: 12px;
+        }
+
+        .video-title {
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .video-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .author-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .video-stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .stat i {
+            font-size: 12px;
+        }
+
+        .stat.views { color: var(--accent-cyan); }
+        .stat.likes { color: var(--accent-pink); }
+        .stat.shares { color: var(--accent-green); }
+
+        /* List View Styles */
+        .video-grid.list-view .video-card {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .video-grid.list-view .video-thumbnail {
+            width: 280px;
+            height: 160px;
+            flex-shrink: 0;
+        }
+
+        .video-grid.list-view .video-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Category Pills */
+        .category-section {
+            margin-bottom: 30px;
+        }
+
+        .category-pills {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .category-pill {
+            padding: 8px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-pill:hover, .category-pill.active {
+            background: rgba(24, 119, 242, 0.2);
+            border-color: var(--facebook-blue);
+            color: var(--facebook-blue);
+        }
+
+        .category-pill i {
+            font-size: 14px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 50px;
+            padding: 30px 0;
+        }
+
+        .page-btn {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .page-btn:hover:not(:disabled), .page-btn.active {
+            background: var(--facebook-blue);
+            border-color: var(--facebook-blue);
+            color: white;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .page-ellipsis {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Footer Stats */
+        .footer-stats {
+            background: rgba(26, 31, 46, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 30px 40px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-stat-card {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-stat-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .footer-stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .footer-stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stats-bar {
+                justify-content: center;
+            }
+
+            .controls {
+                padding: 15px 20px;
+            }
+
+            .controls-content {
+                flex-direction: column;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .filter-group {
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                padding-bottom: 10px;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .video-grid.list-view .video-card {
+                flex-direction: column;
+            }
+
+            .video-grid.list-view .video-thumbnail {
+                width: 100%;
+                height: 200px;
+            }
+
+            .footer-stats {
+                padding: 20px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--facebook-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 35px;
+            height: 35px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toast-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .toast-content p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fab fa-facebook-f"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Facebook Universe</h1>
+                    <span>Video Analytics</span>
+                </div>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalVideos">200</div>
+                    <div class="stat-label">Total Videos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalViews">2.4B</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalLikes">890M</div>
+                    <div class="stat-label">Total Likes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="activeUsers">12.8M</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Controls -->
+    <div class="controls">
+        <div class="controls-content">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search videos, creators, categories...">
+            </div>
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-globe"></i> All
+                </button>
+                <button class="filter-btn" data-filter="entertainment">
+                    <i class="fas fa-play-circle"></i> Entertainment
+                </button>
+                <button class="filter-btn" data-filter="music">
+                    <i class="fas fa-music"></i> Music
+                </button>
+                <button class="filter-btn" data-filter="sports">
+                    <i class="fas fa-futbol"></i> Sports
+                </button>
+                <button class="filter-btn" data-filter="news">
+                    <i class="fas fa-newspaper"></i> News
+                </button>
+                <button class="filter-btn" data-filter="comedy">
+                    <i class="fas fa-laugh"></i> Comedy
+                </button>
+                <select class="sort-select" id="sortSelect">
+                    <option value="views">Most Viewed</option>
+                    <option value="likes">Most Liked</option>
+                    <option value="shares">Most Shared</option>
+                    <option value="recent">Most Recent</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-tab="popular">
+                <i class="fas fa-fire"></i> 100 Popular Videos
+            </button>
+            <button class="tab" data-tab="trending">
+                <i class="fas fa-chart-line"></i> 100 Trending Videos
+            </button>
+        </div>
+
+        <!-- Category Pills -->
+        <div class="category-section">
+            <div class="category-pills" id="categoryPills">
+                <div class="category-pill active" data-category="all">
+                    <i class="fas fa-border-all"></i> All Categories
+                </div>
+                <div class="category-pill" data-category="viral">
+                    <i class="fas fa-bolt"></i> Viral
+                </div>
+                <div class="category-pill" data-category="music">
+                    <i class="fas fa-compact-disc"></i> Music Videos
+                </div>
+                <div class="category-pill" data-category="gaming">
+                    <i class="fas fa-gamepad"></i> Gaming
+                </div>
+                <div class="category-pill" data-category="food">
+                    <i class="fas fa-utensils"></i> Food & Cooking
+                </div>
+                <div class="category-pill" data-category="travel">
+                    <i class="fas fa-plane"></i> Travel
+                </div>
+                <div class="category-pill" data-category="tech">
+                    <i class="fas fa-laptop"></i> Tech
+                </div>
+                <div class="category-pill" data-category="fitness">
+                    <i class="fas fa-dumbbell"></i> Fitness
+                </div>
+            </div>
+        </div>
+
+        <!-- Popular Section -->
+        <section id="popularSection">
+            <div class="section-header">
+                <div class="section-title">
+                    <h2>🔥 Popular Videos</h2>
+                    <span class="badge">Top 100</span>
+                </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="grid" title="Grid View">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="view-btn" data-view="list" title="List View">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="video-grid" id="popularGrid">
+                <!-- Videos will be inserted here -->
+            </div>
+        </section>
+
+        <!-- Trending Section -->
+        <section id="trendingSection" style="display: none;">
+            <div class="section-header">
+                <div class="section-title trending">
+                    <h2>📈 Trending Videos</h2>
+                    <span class="badge">Hot Now</span>
+                </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="grid" title="Grid View">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="view-btn" data-view="list" title="List View">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="video-grid" id="trendingGrid">
+                <!-- Videos will be inserted here -->
+            </div>
+        </section>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+            <button class="page-btn" disabled><i class="fas fa-chevron-left"></i></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <span class="page-ellipsis">...</span>
+            <button class="page-btn">10</button>
+            <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </main>
+
+    <!-- Footer Stats -->
+    <footer class="footer-stats">
+        <div class="footer-content">
+            <div class="footer-stat-card">
+                <div class="footer-stat-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <div class="footer-stat-value">2.4B</div>
+                <div class="footer-stat-label">Total Views Today</div>
+            </div>
+            <div class="footer-stat-card">
+                <div class="footer-stat-icon">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <div class="footer-stat-value">156M</div>
+                <div class="footer-stat-label">Total Shares</div>
+            </div>
+            <div class="footer-stat-card">
+                <div class="footer-stat-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="footer-stat-value">45.2M</div>
+                <div class="footer-stat-label">Total Comments</div>
+            </div>
+            <div class="footer-stat-card">
+                <div class="footer-stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="footer-stat-value">8.5B</div>
+                <div class="footer-stat-label">Watch Hours</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="toast-content">
+            <h4>Video Added</h4>
+            <p>Video has been saved to your favorites</p>
+        </div>
+    </div>
+
+    <script>
+        // Video Data Generator
+        const categories = ['entertainment', 'music', 'sports', 'news', 'comedy', 'gaming', 'food', 'travel', 'tech', 'fitness'];
+        const categoryIcons = {
+            entertainment: 'fa-play-circle',
+            music: 'fa-music',
+            sports: 'fa-futbol',
+            news: 'fa-newspaper',
+            comedy: 'fa-laugh',
+            gaming: 'fa-gamepad',
+            food: 'fa-utensils',
+            travel: 'fa-plane',
+            tech: 'fa-laptop',
+            fitness: 'fa-dumbbell'
+        };
+
+        const videoTitles = [
+            "Epic Goal of the Season - You Won't Believe This Finish!",
+            "Behind the Scenes of the Biggest Concert Ever",
+            "Breaking: Major Announcement Shakes the World",
+            "Adorable Puppy Meets Kitten for First Time",
+            "Chef Makes Viral Recipe That Changed Everything",
+            "Dramatic Final Moments - Championship Finals",
+            "Hidden Beach Paradise You've Never Heard Of",
+            "New Album Preview - Exclusive First Listen",
+            "Comedian's Hilarious Stand-up Goes Viral",
+            "How to Master Any Skill in 30 Days",
+            "Incredible Wildlife Encounter in Nature",
+            "Celebrity Prank Goes Wrong - Must Watch",
+            "Dance Challenge That Broke the Internet",
+            "Tech Giant Unveils Revolutionary Product",
+            "Sports Star's Emotional Victory Speech",
+            "Travel Vlog: Most Beautiful Place on Earth",
+            "Music Video That Broke All Records",
+            "Cooking Challenge: Gordon Ramsay vs Home Chef",
+            "Unbelievable Magic Trick Explained",
+            "Fitness Transformation That Inspired Millions",
+            "Street Performer Creates Amazing Art",
+            "New Movie Trailer Drops - Looks Epic!",
+            "Interview with a Legend - Full Segment",
+            "DIY Home Makeover on a Budget",
+            "Gaming Stream Highlights of the Year",
+            "Fashion Week Best Moments Compilation",
+            "New Dance Craze Taking Over TikTok",
+            "Scientists Make Incredible Discovery",
+            "Comedy Sketch That's Too Funny",
+            "Sports Interview That Made Headlines",
+            "Food Tour Through Street Markets",
+            "Travel Adventure in Remote Location",
+            "Tech Review: Is It Worth the Hype?",
+            "Fitness Workout That Gets Results",
+            "Music Cover That Gave Everyone Chills",
+            "Entertainment News Roundup This Week",
+            "Viral Challenge Results Are In",
+            "Behind the Scenes of Hit TV Show",
+            "Amazing Art Installation Unveiled",
+            "Sports Training Secrets Revealed",
+            "New Restaurant Dish Goes Viral",
+            "Travel Tips from Expert Nomads",
+            "Gaming Tournament Epic Moments",
+            "Comedy Duo Best Sketches Compilation",
+            "Fitness Tips from Olympic Athletes",
+            "Tech Hacks Everyone Should Know",
+            "Music Festival Best Performances",
+            "Entertainment Industry Secrets Exposed",
+            "Viral Video Original Footage",
+            "Sports Event Highlights Package",
+            "Food Challenge That Went Wrong",
+            "Travel Vlog: Hidden Gems Series",
+            "Gaming Setup Tour - Ultimate Build",
+            "Comedy Special Preview Clip",
+            "Fitness Transformation Journey",
+            "Tech Product Comparison 2024",
+            "Music Artist Studio Session",
+            "Entertainment Award Show Moments",
+            "Viral Dance Moves Tutorial",
+            "Sports Analysis Deep Dive",
+            "Food Recipe Secrets Revealed",
+            "Travel Adventure Compilation",
+            "Gaming Tips for Beginners",
+            "Comedy Prank Gone Right",
+            "Fitness Challenge Results",
+            "Tech News Weekly Roundup",
+            "Music Album Launch Event",
+            "Entertainment Crossover Episode",
+            "Viral Challenge Compilation",
+            "Sports Championship Highlights",
+            "Food Delivery Review Special",
+            "Travel Bucket List Destinations",
+            "Gaming Live Stream Moments",
+            "Comedy Roast Battle Finals",
+            "Fitness Marathon Coverage",
+            "Tech Startup Pitch Competition",
+            "Music Collaboration Announcement",
+            "Entertainment Documentary Preview",
+            "Viral Trend Explained",
+            "Sports Transfer News Update",
+            "Food Culture Deep Dive",
+            "Travel Solo Adventure Story",
+            "Gaming Community Event Highlights",
+            "Comedy Improv Night Best Bits",
+            "Fitness Boot Camp Experience",
+            "Tech Conference Key Highlights",
+            "Music Awards Show Performances",
+            "Entertainment Industry Awards",
+            "Viral Story Continues Update",
+            "Sports Season Recap Highlights",
+            "Food Science Experiment Fun",
+            "Travel Photography Tips",
+            "Gaming Speedrun World Record",
+            "Comedy Slam Poetry Night",
+            "Fitness Nutrition Guide",
+            "Tech Gadget Unboxing",
+            "Music Remix Competition",
+            "Entertainment Fan Convention",
+            "Viral Challenge Winner Interview",
+            "Sports MVP Interview Special"
+        ];
+
+        const authorNames = [
+            "TechWiz Media", "Sports Central", "Music Factory", "Comedy Kings", 
+            "Foodie Paradise", "Travel Dreams", "Gaming Hub", "Fitness Pro",
+            "News Network", "Entertainment Now", "Viral Vision", "Trending Today",
+            "Creator Studio", "Media House", "Digital Dreams", "Content King",
+            "Stream Squad", "Video Nation", "Content Pro", "Media Masters"
+        ];
+
+        function generateViews(rank, type) {
+            const baseViews = type === 'popular' ? 50000000 : 30000000;
+            const rankMultiplier = Math.max(0.1, 1 - (rank * 0.01));
+            return Math.round(baseViews * rankMultiplier * (0.8 + Math.random() * 0.4));
+        }
+
+        function generateLikes(views) {
+            return Math.round(views * (0.15 + Math.random() * 0.1));
+        }
+
+        function generateShares(views) {
+            return Math.round(views * (0.02 + Math.random() * 0.03));
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000000) return (num / 1000000000).toFixed(1) + 'B';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        function generateDuration() {
+            const minutes = Math.floor(Math.random() * 25) + 1;
+            const seconds = Math.floor(Math.random() * 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function getThumbnailPlaceholder(index) {
+            const colors = [
+                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+                'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
+                'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+                'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+                'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)',
+                'linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)'
+            ];
+            return colors[index % colors.length];
+        }
+
+        function createVideoCard(video, rank, type) {
+            const rankClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+            const initials = video.author.split(' ').map(n => n[0]).join('').substring(0, 2);
+            
+            return `
+                <div class="video-card" data-category="${video.category}" data-views="${video.views}" data-likes="${video.likes}">
+                    <div class="video-thumbnail" style="background: ${getThumbnailPlaceholder(rank)}">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 48px; color: rgba(255,255,255,0.3);">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="video-rank ${rankClass}">${rank}</div>
+                        ${type === 'trending' ? '<div class="video-trending-badge"><i class="fas fa-fire"></i> TRENDING</div>' : ''}
+                        <div class="video-duration">${video.duration}</div>
+                    </div>
+                    <div class="video-content">
+                        <div class="video-category">
+                            <i class="fas ${categoryIcons[video.category]}"></i> ${video.category.charAt(0).toUpperCase() + video.category.slice(1)}
+                        </div>
+                        <h3 class="video-title">${video.title}</h3>
+                        <div class="video-meta">
+                            <div class="video-author">
+                                <div class="author-avatar">${initials}</div>
+                                <span class="author-name">${video.author}</span>
+                            </div>
+                            <div class="video-stats">
+                                <div class="stat views">
+                                    <i class="fas fa-eye"></i>
+                                    <span>${formatNumber(video.views)}</span>
+                                </div>
+                                <div class="stat likes">
+                                    <i class="fas fa-heart"></i>
+                                    <span>${formatNumber(video.likes)}</span>
+                                </div>
+                                <div class="stat shares">
+                                    <i class="fas fa-share"></i>
+                                    <span>${formatNumber(video.shares)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateVideos(count, type) {
+            const videos = [];
+            const shuffledTitles = [...videoTitles].sort(() => Math.random() - 0.5);
+            
+            for (let i = 0; i < count; i++) {
+                const views = generateViews(i + 1, type);
+                videos.push({
+                    title: shuffledTitles[i % shuffledTitles.length] + (i >= shuffledTitles.length ? ` #${Math.floor(i / shuffledTitles.length) + 1}` : ''),
+                    category: categories[Math.floor(Math.random() * categories.length)],
+                    author: authorNames[Math.floor(Math.random() * authorNames.length)],
+                    views: views,
+                    likes: generateLikes(views),
+                    shares: generateShares(views),
+                    duration: generateDuration(),
+                    timeAgo: `${Math.floor(Math.random() * 24) + 1} hours ago`
+                });
+            }
+            return videos;
+        }
+
+        // Initialize data
+        let popularVideos = generateVideos(100, 'popular');
+        let trendingVideos = generateVideos(100, 'trending');
+        let currentTab = 'popular';
+        let currentFilter = 'all';
+        let currentCategory = 'all';
+        let currentSort = 'views';
+        let currentView = 'grid';
+        let currentPage = 1;
+        const videosPerPage = 12;
+
+        function renderVideos() {
+            const videos = currentTab === 'popular' ? popularVideos : trendingVideos;
+            const grid = document.getElementById(currentTab === 'popular' ? 'popularGrid' : 'trendingGrid');
+            
+            // Filter
+            let filtered = videos.filter(v => {
+                const matchesFilter = currentFilter === 'all' || v.category === currentFilter;
+                const matchesCategory = currentCategory === 'all' || v.category === currentCategory;
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const matchesSearch = v.title.toLowerCase().includes(searchTerm) || 
+                                     v.author.toLowerCase().includes(searchTerm) ||
+                                     v.category.toLowerCase().includes(searchTerm);
+                return matchesFilter && matchesCategory && matchesSearch;
+            });
+
+            // Sort
+            filtered.sort((a, b) => {
+                if (currentSort === 'views') return b.views - a.views;
+                if (currentSort === 'likes') return b.likes - a.likes;
+                if (currentSort === 'shares') return b.shares - b.shares;
+                return 0;
+            });
+
+            // Paginate
+            const start = (currentPage - 1) * videosPerPage;
+            const paginated = filtered.slice(start, start + videosPerPage);
+
+            grid.innerHTML = paginated.map((video, i) => 
+                createVideoCard(video, start + i + 1, currentTab)
+            ).join('');
+
+            // Update pagination
+            const totalPages = Math.ceil(filtered.length / videosPerPage);
+            renderPagination(totalPages);
+
+            // Add click handlers
+            document.querySelectorAll('.video-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    showToast();
+                });
+            });
+        }
+
+        function renderPagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+            let html = '';
+            
+            html += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})"><i class="fas fa-chevron-left"></i></button>`;
+            
+            for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+            
+            if (totalPages > 5) {
+                html += `<span class="page-ellipsis">...</span>`;
+                html += `<button class="page-btn" onclick="changePage(${totalPages})">${totalPages}</button>`;
+            }
+            
+            html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})"><i class="fas fa-chevron-right"></i></button>`;
+            
+            pagination.innerHTML = html;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(100 / videosPerPage);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderVideos();
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentTab = tab.dataset.tab;
+                currentPage = 1;
+                
+                document.getElementById('popularSection').style.display = currentTab === 'popular' ? 'block' : 'none';
+                document.getElementById('trendingSection').style.display = currentTab === 'trending' ? 'block' : 'none';
+                
+                renderVideos();
+            });
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                currentCategory = 'all';
+                document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                document.querySelector('.category-pill[data-category="all"]').classList.add('active');
+                currentPage = 1;
+                renderVideos();
+            });
+        });
+
+        document.querySelectorAll('.category-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                currentCategory = pill.dataset.category;
+                currentPage = 1;
+                renderVideos();
+            });
+        });
+
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const view = btn.dataset.view;
+                currentView = view;
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const grids = document.querySelectorAll('.video-grid');
+                grids.forEach(grid => {
+                    grid.classList.toggle('list-view', view === 'list');
+                });
+            });
+        });
+
+        document.getElementById('sortSelect').addEventListener('change', (e) => {
+            currentSort = e.target.value;
+            renderVideos();
+        });
+
+        document.getElementById('searchInput').addEventListener('input', () => {
+            renderVideos();
+        });
+
+        // Initialize
+        renderVideos();
+
+        // Animate stats on load
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            const range = end - start;
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const value = Math.floor(progress * range + start);
+                obj.textContent = formatNumber(value);
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        setTimeout(() => {
+            animateValue('totalVideos', 0, 200, 1500);
+            animateValue('totalViews', 0, 2400000000, 2000);
+            animateValue('totalLikes', 0, 890000000, 1800);
+            animateValue('activeUsers', 0, 12800000, 1600);
+        }, 500);
+    </script>
+</body>
+</html>

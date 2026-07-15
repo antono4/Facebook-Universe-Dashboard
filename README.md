@@ -1,5 +1,7 @@
 # Facebook Universe Dashboard 📊
 
+![Facebook Dashboard Banner](https://images.unsplash.com/photo-1664575599736-c5197c684128?w=800)
+
 Analytics dashboard for Facebook insights and metrics.
 
 ## ✨ Features

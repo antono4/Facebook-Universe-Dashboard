@@ -1282,7 +1282,7 @@
             filtered.sort((a, b) => {
                 if (currentSort === 'views') return b.views - a.views;
                 if (currentSort === 'likes') return b.likes - a.likes;
-                if (currentSort === 'shares') return b.shares - b.shares;
+                if (currentSort === 'shares') return b.shares - a.shares;
                 return 0;
             });
 
